@@ -1,5 +1,5 @@
 # Measuring Mathematical Problem Solving With the MATH Dataset
-This is the repository for [Measuring Mathematical Problem Solving With the MATH Dataset](https://arxiv.org/pdf/2009.03300) by
+This is the repository for [Measuring Mathematical Problem Solving With the MATH Dataset](https://arxiv.org/pdf/2103.03874) by
 [Dan Hendrycks](https://danhendrycks.com/), [Collin Burns](http://collinpburns.com), [Saurav Kadavath](http://www.sauravkadavath.com), [Akul Arora](https://github.com/akulaarora), [Steven Basart](https://stevenbas.art), [Eric Tang](https://www.linkedin.com/in/eric-tang-185350145/), [Dawn Song](https://people.eecs.berkeley.edu/~dawnsong/), and [Jacob Steinhardt](https://www.stat.berkeley.edu/~jsteinhardt/).
 
 This repository contains dataset loaders and evaluation code.
