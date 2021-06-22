@@ -5,7 +5,7 @@ Example:
 
 CUDA_VISIBLE_DEVICES=6 python3 eval_math_gpt.py \
     --arch=gpt2 \
-    --aops-dataroot=./MATH/data/test/*/*.json \
+    --math-dataroot=./MATH/data/test/*/*.json \
     --boxed-only \
     --load=/data/sauravkadavath/maths-beta__modeling__checkpoints/MATH__bbox_only_3_epochs__finetune_6_epochs__pretraining_khan_latex_loss_only__gpt117/checkpoint.pth
 
@@ -33,7 +33,7 @@ import torch.multiprocessing as mp
 
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-from dataset.aops import AOPSMathDataset
+from dataset.MATH import MATHDataset
 from dataset.deepmind import DeepMindMathDataset
 from dataset.khan_academy import KhanAcademyMathDataset
 from dataset.util import clean_numbers, last_boxed_only, last_boxed_only_string
@@ -205,7 +205,7 @@ def run_eval(args):
             output_full = output_str
             output_str = last_boxed_only_string(output_str)
 
-            if args.aops_mode == "eval_peeking":
+            if args.math_mode == "eval_peeking":
                 answer_str = last_boxed_only_string(tokenizer.decode(batch['labels'][0]))
             else:
                 answer_str = tokenizer.decode(batch['labels'][0])
@@ -326,11 +326,11 @@ def get_model_output(context, full_output, tokenizer):
 def get_dataset(args):
     all_datasets = []
 
-    if args.aops_dataroot is not None:
-        if args.aops_mode == 'gpt2-eval':
+    if args.math_dataroot is not None:
+        if args.math_mode == 'gpt2-eval':
             all_datasets.append(
-                AOPSMathDataset(
-                    dataroot=args.aops_dataroot, 
+                MATHDataset(
+                    dataroot=args.math_dataroot, 
                     tokenizer=None, # Set in run_training(), not in dataset creation 
                     max_tokens=384 if args.arch == 'gpt2-xl' else 1024, 
                     mode='gpt2-eval', 
@@ -338,12 +338,12 @@ def get_dataset(args):
             )
         else:
             all_datasets.append(
-                AOPSMathDataset(
-                    dataroot=args.aops_dataroot, 
+                MATHDataset(
+                    dataroot=args.math_dataroot, 
                     tokenizer=None, # Set in run_training(), not in dataset creation 
                     max_tokens=384 if args.arch == 'gpt2-xl' else 1024, 
                     mode='gpt2-eval',
-                    mode_answer=args.aops_mode,
+                    mode_answer=args.math_mode,
                     peek_fraction=args.peek_fraction
                 )
             )
@@ -363,8 +363,8 @@ if __name__ == "__main__":
     parser.add_argument('--tokenizer-merges-file', default=None, type=str)
 
     # Dataloading
-    parser.add_argument('--aops-dataroot', default=None, type=str)
-    parser.add_argument('--aops-mode', default='gpt2-eval', type=str)
+    parser.add_argument('--math-dataroot', default=None, type=str)
+    parser.add_argument('--math-mode', default='gpt2-eval', type=str)
     parser.add_argument('--peek-fraction', type=float, default=1.0)
     
     # Others
