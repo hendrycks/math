@@ -5,8 +5,7 @@ Example:
 
 CUDA_VISIBLE_DEVICES=6 python3 eval_math_gpt.py \
     --arch=gpt2 \
-    --math-dataroot=./MATH/data/test/*/*.json \
-    --boxed-only \
+    --math-dataroot=./MATH/test/*/*.json \
     --load=/data/sauravkadavath/maths-beta__modeling__checkpoints/MATH__bbox_only_3_epochs__finetune_6_epochs__pretraining_khan_latex_loss_only__gpt117/checkpoint.pth
 
 """
@@ -34,7 +33,6 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 from dataset.MATH import MATHDataset
-from dataset.deepmind import DeepMindMathDataset
 from dataset.khan_academy import KhanAcademyMathDataset
 from dataset.util import clean_numbers, last_boxed_only, last_boxed_only_string
 from equivalent import is_equiv
@@ -132,7 +130,7 @@ def run_eval(args):
     """
 
     # Set up model
-    if args.load == "NONE":
+    if args.load is None:
         model = transformers.GPT2LMHeadModel.from_pretrained(args.arch)
     else:
         print(f"Loading model from {args.load}")
