@@ -35,7 +35,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from dataset.MATH import MATHDataset
 from dataset.khan_academy import KhanAcademyMathDataset
 from dataset.util import clean_numbers, last_boxed_only, last_boxed_only_string
-from equivalent import is_equiv
+from math_equivalence import is_equiv
 
 def get_level_type(fname):
     """

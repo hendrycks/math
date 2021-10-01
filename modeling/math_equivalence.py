@@ -1,4 +1,4 @@
-def fix_fracs(string):
+def _fix_fracs(string):
     substrs = string.split("\\frac")
     new_str = substrs[0]
     if len(substrs) > 1:
@@ -29,7 +29,7 @@ def fix_fracs(string):
     string = new_str
     return string
 
-def fix_a_slash_b(string):
+def _fix_a_slash_b(string):
     if len(string.split("/")) != 2:
         return string
     a = string.split("/")[0]
@@ -43,7 +43,7 @@ def fix_a_slash_b(string):
     except:
         return string
 
-def remove_right_units(string):
+def _remove_right_units(string):
     # "\\text{ " only ever occurs (at least in the val set) when describing units
     if "\\text{ " in string:
         splits = string.split("\\text{ ")
@@ -52,25 +52,7 @@ def remove_right_units(string):
     else:
         return string
 
-def order(string):
-    if "(" in string or ")" in string or "[" in string or "]" in string or ", " not in string:
-        return string
-
-    # otherwise, split by "," and sort
-    # ASSUMES commas have been removed from number representation (and spaces have been removed)
-    splits = string.split(", ")
-    splits = sorted(splits)
-    new_str = ""
-    for split in splits:
-        new_str += split + ", "
-    new_str = new_str[:-2]  # remove last ","
-    try:
-        assert new_str[-2:] != ", "  # for testing
-    except:
-        return string
-    return new_str
-
-def fix_sqrt(string):
+def _fix_sqrt(string):
     if "\\sqrt" not in string:
         return string
     splits = string.split("\\sqrt")
@@ -84,11 +66,7 @@ def fix_sqrt(string):
         new_string += new_substr
     return new_string
 
-class NotEqual:
-    def __eq__(self, other):
-        return False
-
-def strip_string(string):
+def _strip_string(string):
     # linebreaks  
     string = string.replace("\n", "")
     #print(string)
@@ -119,8 +97,7 @@ def strip_string(string):
     string = string.replace("\\$", "")
     
     # remove units (on the right)
-    string = remove_right_units(string)
-
+    string = _remove_right_units(string)
 
     # remove percentage
     string = string.replace("\\%", "")
@@ -141,20 +118,20 @@ def strip_string(string):
             string = string.split("=")[1]
 
     # fix sqrt3 --> sqrt{3}
-    string = fix_sqrt(string)
+    string = _fix_sqrt(string)
 
     # remove spaces
     string = string.replace(" ", "")
 
     # \frac1b or \frac12 --> \frac{1}{b} and \frac{1}{2}, etc. Even works with \frac1{72} (but not \frac{72}1). Also does a/b --> \\frac{a}{b}
-    string = fix_fracs(string)
+    string = _fix_fracs(string)
 
     # manually change 0.5 --> \frac{1}{2}
     if string == "0.5":
         string = "\\frac{1}{2}"
 
     # NOTE: X/Y changed to \frac{X}{Y} in dataset, but in simple cases fix in case the model output is X/Y
-    string = fix_a_slash_b(string)
+    string = _fix_a_slash_b(string)
 
     return string
 
@@ -166,79 +143,12 @@ def is_equiv(str1, str2, verbose=False):
         return False
 
     try:
-        ss1 = strip_string(str1)
-        ss2 = strip_string(str2)
+        ss1 = _strip_string(str1)
+        ss2 = _strip_string(str2)
         if verbose:
-            print(ss1, ss2)
+            print((ss1, ss2))
         return ss1 == ss2
     except:
         return str1 == str2
 
-if __name__ == "__main__":
-    """
-    test_in = "\\tfrac{1}{2} + \\frac1{72}"
-    test_out = "\\\\frac{1}{2} + 2/3"
-    print(is_equiv(test_in, test_out), "Expected", False)
-
-    test_in = "10, 4, -2"
-    test_out = "4, 10, -2"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10, 4, 2"
-    test_out = "4, 12, 2"
-    print(is_equiv(test_in, test_out), "Expected", False)
-
-    test_in = "\\tfrac{1}{2} +\\! \\frac1{72}"
-    test_out = "\\\\dfrac{1}{2} +\\frac{1}{72}"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10\\text{ units}"
-    test_out = "10 "
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10\\text{ units}"
-    test_out = "100 "
-    print(is_equiv(test_in, test_out), "Expected", False)
-
-    test_in = "10"
-    test_out = "\\$10"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "\\left(x-2\\right)\\left(x+2\\right)"
-    test_out = "(x-2)(x+2)"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "0.1, 4, 2"
-    test_out = "4, .1, 2"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "0.1"
-    test_out = ".1"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10\\%"
-    test_out = "10"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10\\sqrt{3} + \\sqrt4"
-    test_out = "10\\sqrt3 + \\sqrt{4}"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "\\frac34i"
-    test_out = "\\frac{3}{4}i"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "\\tfrac83"
-    test_out = "\\frac{8}{3}"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "5x - 7y + 11z + 4 = 0"
-    test_out = "x + y - z + 2 = 0"
-    print(is_equiv(test_in, test_out), "Expected", False)
-    
-    test_in = "1/2"
-    test_out = "\\frac{1}{2}"
-    print(is_equiv(test_in, test_out), "Expected", True)
-    """
-
-
+ 

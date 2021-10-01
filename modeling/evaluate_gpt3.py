@@ -4,7 +4,7 @@ import numpy as np
 import operator
 import json
 from dataset.util import clean_numbers, last_boxed_only, last_boxed_only_string
-from equivalent import is_equiv
+from math_equivalence import is_equiv
 
 openai.api_key = PUT_KEY_HERE
 
