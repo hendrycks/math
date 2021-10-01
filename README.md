@@ -8,8 +8,6 @@ Download the [**MATH dataset here**](https://people.eecs.berkeley.edu/~hendrycks
 
 Download the [**AMPS pretraining dataset here**](https://drive.google.com/file/d/1hQsua3TkpEmcJD_UWQx8dmNdEZPyxw23/view?usp=sharing).
 
-Install a utility for determining whether 2 answers for a problem in the MATH dataset are equivalent: pip install git+https://github.com/hendrycks/math.git
-
 <img align="center" src="dataset_comparison.png" width="750">
 
 ## Citation
