@@ -146,7 +146,7 @@ def is_equiv(str1, str2, verbose=False):
         ss1 = _strip_string(str1)
         ss2 = _strip_string(str2)
         if verbose:
-            print((ss1, ss2))
+            print(ss1, ss2)
         return ss1 == ss2
     except:
         return str1 == str2
