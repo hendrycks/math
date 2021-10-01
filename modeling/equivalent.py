@@ -52,24 +52,6 @@ def remove_right_units(string):
     else:
         return string
 
-def order(string):
-    if "(" in string or ")" in string or "[" in string or "]" in string or ", " not in string:
-        return string
-
-    # otherwise, split by "," and sort
-    # ASSUMES commas have been removed from number representation (and spaces have been removed)
-    splits = string.split(", ")
-    splits = sorted(splits)
-    new_str = ""
-    for split in splits:
-        new_str += split + ", "
-    new_str = new_str[:-2]  # remove last ","
-    try:
-        assert new_str[-2:] != ", "  # for testing
-    except:
-        return string
-    return new_str
-
 def fix_sqrt(string):
     if "\\sqrt" not in string:
         return string
@@ -180,14 +162,6 @@ if __name__ == "__main__":
     test_out = "\\\\frac{1}{2} + 2/3"
     print(is_equiv(test_in, test_out), "Expected", False)
 
-    test_in = "10, 4, -2"
-    test_out = "4, 10, -2"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "10, 4, 2"
-    test_out = "4, 12, 2"
-    print(is_equiv(test_in, test_out), "Expected", False)
-
     test_in = "\\tfrac{1}{2} +\\! \\frac1{72}"
     test_out = "\\\\dfrac{1}{2} +\\frac{1}{72}"
     print(is_equiv(test_in, test_out), "Expected", True)
@@ -206,10 +180,6 @@ if __name__ == "__main__":
 
     test_in = "\\left(x-2\\right)\\left(x+2\\right)"
     test_out = "(x-2)(x+2)"
-    print(is_equiv(test_in, test_out), "Expected", True)
-
-    test_in = "0.1, 4, 2"
-    test_out = "4, .1, 2"
     print(is_equiv(test_in, test_out), "Expected", True)
 
     test_in = "0.1"
