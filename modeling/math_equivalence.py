@@ -150,5 +150,3 @@ def is_equiv(str1, str2, verbose=False):
         return ss1 == ss2
     except:
         return str1 == str2
-
- 
