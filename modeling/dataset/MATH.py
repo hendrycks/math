@@ -60,7 +60,7 @@ class MATHDataset(BaseMathDataset):
         if sample == None:
             return None
 
-        if self.mode_answe == 'peeking_only':
+        if self.mode_answer == 'peeking_only':
             return self.clean_filter_sample_peeking_gpt(sample)
         if self.mode_answer == 'mixed_full_and_peeking':
             if random.random() < 0.5:
