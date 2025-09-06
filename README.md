@@ -4,7 +4,7 @@ This is the repository for [Measuring Mathematical Problem Solving With the MATH
 
 This repository contains dataset loaders and evaluation code.
 
-Download the [**MATH dataset here**](https://people.eecs.berkeley.edu/~hendrycks/MATH.tar).
+Download the [**MATH dataset here**](https://huggingface.co/datasets/qwedsacf/competition_math).
 
 Download the [**AMPS pretraining dataset here**](https://drive.google.com/file/d/1hQsua3TkpEmcJD_UWQx8dmNdEZPyxw23/view?usp=sharing).
 
